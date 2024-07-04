@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="content" style="margin-top: 30px;border: 1px solid #ccc;width: 300px;height: 200px;overflow: auto;"></div>
+</body>
+
+</html>
+<script>
+  //不加防抖的
+  // const inputa = document.getElementById('unDebounce')
+
+  // function handleNameSearch(e) {
+  //     const value = e.target.value
+  //     fetch('http://localhost:3000/users')
+  //         .then(res => res.json())
+  //         .then(data => {
+
+  //             const users = data;
+  //             const filterUsers =users.filter(user =>{
+
+  //                 return user.name.includes(value)
+
+  //             })  
+  //             console.log(filterUsers);    
+  //             document.getElementById('content').innerHTML = filterUsers.map(user => {
+  //                 return `<div>${user.name}</div>`
+  //             }).join('')
+
+  //         })
+  // }
+
+  // inputa.addEventListener('keyup',(handleNameSearch))
+
+
+  // 创建一个 EventSource 对象，指定要连接的服务器端点
+  const eventSource = new EventSource('http://localhost:3000/events');
+
+  // 监听 message 事件，该事件会在接收到新的消息时触发
+  eventSource.addEventListener('message', function (event) {
+    // 解析收到的数据
+    const data = JSON.parse(event.data);
+
+    // 处理数据，这里可以根据实际需求进行操作
+    console.log(data);
+    content = document.getElementById('content');
+    content.innerText += data.message;
+    // 自动滚动到底部
+    content.scrollTop = content.scrollHeight - content.clientHeight;
+  });
+
+  // 监听其他事件，如打开连接、关闭连接等
+  eventSource.onopen = function (event) {
+    console.log('Connection opened');
+    alert('Connection opened');
+  };
+
+  eventSource.onerror = function (event) {
+    console.error('Error occurred');
+    alert('Error occurred');
+  };
+
+</script>
